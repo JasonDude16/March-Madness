@@ -12,7 +12,6 @@ knitr::opts_knit$set(root.dir = '..')
 
 ```{r include=FALSE}
 library(tidyverse)
-library(MarchMadness)
 ```
 
 For this assignemnt I chose to analyze the March Madnesss dataset. I must admit that I'm not a follower of basketball, not even during March Madness. In fact, last year was my first time making a bracket for the tournament and I only made it because I was peer pressured by my coworkers. I showcased how little I knew by picking the top seeds for every single matchup-- neeless to say I didn't do very well. That being said, I'm not sure where to begin with this overwhelmingly large dataset, but I'll give it my best effort.
@@ -30,7 +29,7 @@ AllGames$t1_name <- as.factor(AllGames$t1_name)
 AllGames$t2_name <- as.factor(AllGames$t2_name)
 ```
 
-```{r Season_WL, cache=TRUE}
+```{r Season_WL, echo=TRUE}
 team_win <- 
      AllGames %>% 
      group_by(t1_name, season) %>% 
@@ -55,7 +54,7 @@ AllGames_WL <-
     arrange(desc(WL_ratio))
 ```
 
-``` {r Season_WL2, cache = TRUE}
+``` {r Season_WL2, echo=TRUE}
 team_win2 <- 
      AllGames %>% 
      group_by(t1_name) %>% 
@@ -80,7 +79,7 @@ AllGames_WL2 <-
     arrange(desc(WL_ratio))
 ```
 
-```{r Season W/L Table}
+```{r Season W/L Table, echo=TRUE}
 rmarkdown::paged_table(AllGames_WL[1:100,], options = list(rows.print = 10))
 ```
 
@@ -88,7 +87,7 @@ Gonzaga *appears* takes the cake with the highest W/L ratio, `r AllGames_WL[1,5]
 
 The next question I'm thinking about is: Did a team just have one really good season? Virginia is only listed once in the top 10, and so I wonder if they had one good season or if they're also a good team on average. I'll remove the group_by(season), that way I can look at the average WL ratio for each team over the last 5 years. 
 
-```{r Season W/L Table2}
+```{r Season W/L Table2, echo=TRUE}
 rmarkdown::paged_table(AllGames_WL2[1:100,], options = list(rows.print = 10))
 ```
 
@@ -97,7 +96,7 @@ Gonzaga, Villanova, and Virginia still come out on top with average W/L ratios o
 ### Tournament Win/Loss Record: 2015-2019
 A few teams appear more than once in the table with the top 20 W/L records over the last 5 seasons. Do these high W/L ratios translate to high tournament performance? Let's take a look:
 
-```{r Tournament W/L, cache=TRUE}
+```{r Tournament W/L, echo=TRUE}
 # Tourney 
 tourn_win <- 
         TournAll %>% 
@@ -178,7 +177,7 @@ TournAll %>%
 plot_tourn_wl <- rbind(plot_tourn_w, plot_tourn_l)
 ```
 
-```{r Tournament W/L plot, fig.align= "center"}
+```{r Tournament W/L plot, fig.align= "center", echo=TRUE}
 g1 <- 
   ggplot(plot_tourn_wl, mapping = aes(x = t1_name, fill = outcome)) + 
         geom_bar(color = "black", width = 0.75) 
@@ -199,7 +198,7 @@ Above is a graph displaying teams with >= 4 wins in a single tournament between 
 
 ### FGP and Wins
 Past W/L ratios would certainly be a good predictor of future W/L ratios. What other predictors could potentially predict team wins? It would make sense that higher field goal percentages leads to more wins. Of course, it could also be true that higher field goal percentages are a result of shooting less baskets overall, and making a higher percentage of fewer shots. The relationship will likely give an idea of which of these scenarios is actually occuring.  
-```{r FGPCT}
+```{r FGPCT, echo=TRUE}
 fgpct <- function(greaterthan, lessthan) {
     
     x <- 
@@ -239,11 +238,10 @@ fgpct_comb <- rbind(fgpct(10, 20),
                     fgpct(60, 65),
                     fgpct(65, 70),
                     fgpct(70, 75),
-                    fgpct(75, 80)
-                    )
+                    fgpct(75, 80))
 ```
 
-```{r FGPCT plot, fig.align = "center"}
+```{r FGPCT plot, fig.align = "center", echo=TRUE}
 g2 <-
   ggplot(fgpct_comb, mapping = aes(x = avg_pct, y = win_prop)) + 
   geom_bar(stat = "identity", fill = "coral3") + 
@@ -265,7 +263,7 @@ Above is a plot where win proportion is binned into field goal percentage groups
 ### Wins Throughout Season
 Are wins and losses throughout a season "random"? In other words, do losses occur randomly throughout a season, or are they clustered together at a certain time? I'm not familiar with how basketball seasons work, and so I don't know if the same teams play each other repeatedly at a certain point in the season or not. If they do, then this would of course affect the "randomness" of wins and losses obersved.
 
-```{r WoT, fig.align= "center"}
+```{r WoT, fig.align= "center", echo=TRUE}
 AllGames %>% 
     filter(season == 2019, 
            t1_name %in% c("Duke",
